@@ -18,8 +18,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-require('mini.pairs').setup()
-
 vim.keymap.set('n', '<space>ct', function()
   -- Run VimtexCompile
   vim.cmd('VimtexCompile')
