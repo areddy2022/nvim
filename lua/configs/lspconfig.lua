@@ -42,6 +42,10 @@ lspconfig.clangd.setup {
   on_attach = nvlsp.on_attach,
   capabilities = nvlsp.capabilities,
   filetypes = { "cpp", "c" },
+  cmd = {
+    "clangd",
+    "--offset-encoding=utf-16",
+  },
 }
 
 lspconfig.texlab.setup {
