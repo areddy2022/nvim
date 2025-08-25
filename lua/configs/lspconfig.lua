@@ -5,7 +5,7 @@ local lspconfig = require "lspconfig"
 local util = require "lspconfig/util"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "clangd", "pyright", "pylsp", "clangd", "rust_analyzer", "texlab" }
+local servers = { "html", "cssls", "clangd", "pyright", "pylsp", "clangd", "rust_analyzer", "texlab", "vhdl_ls" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- lsps with default config
@@ -66,6 +66,11 @@ lspconfig.rust_analyzer.setup {
       },
     },
   },
+}
+
+lspconfig.vhdl_ls.setup {
+  on_attach = nvlsp.on_attach,
+  capabilities = nvlsp.capabilities,
 }
 
 -- configuring single server, example: typescript

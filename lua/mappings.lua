@@ -10,4 +10,10 @@ map("n", "<leader>cc", ":VimtexCompile<CR>")
 map("n", "<leader>cq", ":VimtexStop<CR>")
 map("n", "<leader>cv", ":!zathura %:r.pdf &<CR>")
 
+-- for tmux
+map("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", { desc = "window left" })
+map("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", { desc = "window right" })
+map("n", "<C-j>", "<cmd> TmuxNavigateDown<CR>", { desc = "window down" })
+map("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", { desc = "window up" })
+
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")

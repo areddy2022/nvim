@@ -7,6 +7,10 @@ return {
 
   -- These are some examples, uncomment them if you want to see them work!
   {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+  },
+  {
     "lervag/vimtex",
     ft = { "tex" },
     init = function()
@@ -18,12 +22,6 @@ return {
       vim.g.vimtex_view_general_viewer = "zathura"
       vim.g.vimtex_view_automatic = 1
       vim.g.vimtex_context_pdf_viewer = "zathura"
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
     end,
   },
   {
@@ -72,6 +70,7 @@ return {
         "c",
         "python",
         "rust",
+        "vhdl",
       },
     },
   },
@@ -107,6 +106,12 @@ return {
       require("mason-lspconfig").setup {
         automatic_installation = true,
       }
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      require "configs.lspconfig"
     end,
   },
 }
