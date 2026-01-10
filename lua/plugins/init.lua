@@ -71,6 +71,7 @@ return {
         "python",
         "rust",
         "vhdl",
+        "verilog",
       },
     },
   },
@@ -90,6 +91,7 @@ return {
         "rustfmt",
         "texlab",
         "vimtex",
+        "verible",
       },
     },
     config = function(_, opts)

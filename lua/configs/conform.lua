@@ -5,6 +5,8 @@ local options = {
     html = { "prettier" },
     python = { "black" },
     rust = { "rustfmt" },
+    verilog = { "verible" },
+    systemverilog = { "verible" },
   },
 
   format_on_save = {
