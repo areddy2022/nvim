@@ -1,25 +1,48 @@
--- load defaults i.e lua_lsp
-require("nvchad.configs.lspconfig").defaults()
+-- Neovim 0.11+ native LSP configuration using vim.lsp.config
 
-local lspconfig = require "lspconfig"
-local util = require "lspconfig/util"
+-- Custom on_attach function
+local on_attach = function(client, bufnr)
+  local opts = { buffer = bufnr, silent = true }
 
--- EXAMPLE
-local servers = { "html", "cssls", "clangd", "pyright", "pylsp", "clangd", "rust_analyzer", "texlab", "vhdl_ls", "verible" }
-local nvlsp = require "nvchad.configs.lspconfig"
-
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+  -- Keymaps
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+  vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, opts)
+  vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+  vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+  vim.keymap.set("n", "<leader>wl", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, opts)
+  vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+  vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, opts)
+  vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
 end
 
-lspconfig.pyright.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Build capabilities with nvim-cmp support if available
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if ok then
+  capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+end
+
+-- Common config applied to all servers
+local default_config = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+-- Servers with default config
+local servers = { "html", "cssls", "texlab", "vhdl_ls", "verible" }
+
+for _, server in ipairs(servers) do
+  vim.lsp.config[server] = default_config
+end
+
+-- Pyright
+vim.lsp.config.pyright = vim.tbl_deep_extend("force", default_config, {
   filetypes = { "python" },
   settings = {
     python = {
@@ -30,35 +53,27 @@ lspconfig.pyright.setup {
       },
     },
   },
-}
+})
 
-lspconfig.pylsp.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Pylsp
+vim.lsp.config.pylsp = vim.tbl_deep_extend("force", default_config, {
   filetypes = { "python" },
-}
+})
 
-lspconfig.clangd.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Clangd
+vim.lsp.config.clangd = vim.tbl_deep_extend("force", default_config, {
   filetypes = { "cpp", "c" },
   cmd = {
     "clangd",
     "--offset-encoding=utf-16",
   },
-}
+})
 
-lspconfig.texlab.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
-  filetypes = { "tex" },
-}
-
-lspconfig.rust_analyzer.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Rust Analyzer
+vim.lsp.config.rust_analyzer = vim.tbl_deep_extend("force", default_config, {
+  cmd = { "rust-analyzer" },
   filetypes = { "rust" },
-  root_dir = util.root_pattern "Cargo.toml",
+  root_markers = { "Cargo.toml" },
   settings = {
     ["rust-analyzer"] = {
       cargo = {
@@ -66,16 +81,17 @@ lspconfig.rust_analyzer.setup {
       },
     },
   },
-}
+})
 
-lspconfig.vhdl_ls.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
-}
-
--- configuring single server, example: typescript
--- lspconfig.ts_ls.setup {
---   on_attach = nvlsp.on_attach,
---   on_init = nvlsp.on_init,
---   capabilities = nvlsp.capabilities,
--- }
+-- Enable all configured servers
+vim.lsp.enable({
+  "html",
+  "cssls",
+  "texlab",
+  "vhdl_ls",
+  "verible",
+  "pyright",
+  "pylsp",
+  "clangd",
+  "rust_analyzer",
+})

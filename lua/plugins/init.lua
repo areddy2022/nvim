@@ -14,12 +14,20 @@ return {
     "lervag/vimtex",
     ft = { "tex" },
     init = function()
+      local is_mac = vim.fn.has "macunix" == 1
+      local is_linux = vim.fn.has "unix" == 1 and not is_mac
+
       vim.g.tex_flavor = "latex"
       vim.g.vimtex_quickfix_mode = 0
       vim.g.vimtex_mappings_enabled = 0
       vim.g.vimtex_indent_enabled = 0
-      vim.g.vimtex_view_method = "zathura"
-      vim.g.vimtex_view_general_viewer = "zathura"
+      if is_mac then
+        vim.g.vimtex_view_method = "skim"
+        vim.g.vimtex_view_general_viewer = "Skim"
+      elseif is_linux then
+        vim.g.vimtex_view_method = "zathura"
+        vim.g.vimtex_view_general_viewer = "zathura"
+      end
       vim.g.vimtex_view_automatic = 1
       vim.g.vimtex_context_pdf_viewer = "zathura"
     end,
@@ -59,21 +67,9 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "vim",
-        "lua",
-        "vimdoc",
-        "html",
-        "css",
-        "cpp",
-        "c",
-        "python",
-        "rust",
-        "vhdl",
-        "verilog",
-      },
-    },
+    opts = function()
+      return require "configs.treesitter"
+    end,
   },
 
   {
@@ -99,20 +95,42 @@ return {
     end,
   },
   {
+    "tris203/precognition.nvim",
+    event = "VeryLazy",
+    opts = {
+      startVisible = true,
+      showBlankVirtLine = true,
+      hints = {
+        Caret = { text = "^", prio = 2 },
+        Dollar = { text = "$", prio = 1 },
+        MatchingPair = { text = "%", prio = 5 },
+        Zero = { text = "0", prio = 1 },
+        w = { text = "w", prio = 10 },
+        b = { text = "b", prio = 9 },
+        e = { text = "e", prio = 8 },
+        W = { text = "W", prio = 7 },
+        B = { text = "B", prio = 6 },
+        E = { text = "E", prio = 5 },
+      },
+      gutterHints = {
+        G = { text = "G", prio = 10 },
+        gg = { text = "gg", prio = 9 },
+        PrevParagraph = { text = "{", prio = 8 },
+        NextParagraph = { text = "}", prio = 8 },
+      },
+    },
+  },
+  {
     "williamboman/mason-lspconfig.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
-      "neovim/nvim-lspconfig",
     },
     config = function()
       require("mason-lspconfig").setup {
         automatic_installation = true,
       }
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
+      -- Load native LSP config after mason-lspconfig
       require "configs.lspconfig"
     end,
   },

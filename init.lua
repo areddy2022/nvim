@@ -25,6 +25,17 @@ require("lazy").setup({
   { import = "plugins" },
 }, lazy_config)
 
+-- Ensure treesitter queries are on runtimepath (some setups need the /runtime dir)
+do
+  local ts_runtime = vim.fn.stdpath "data" .. "/lazy/nvim-treesitter/runtime"
+  if vim.uv.fs_stat(ts_runtime) then
+    local rtp = vim.opt.rtp:get()
+    if not vim.tbl_contains(rtp, ts_runtime) then
+      vim.opt.rtp:append(ts_runtime)
+    end
+  end
+end
+
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")

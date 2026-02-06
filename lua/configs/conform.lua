@@ -13,6 +13,10 @@ local options = {
     timeout_ms = 500,
     lsp_fallback = true,
   },
+
+  -- Show error notifications when formatting fails
+  notify_on_error = true,
+  notify_no_formatters = true,
 }
 
 return options
