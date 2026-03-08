@@ -83,6 +83,13 @@ vim.lsp.config.rust_analyzer = vim.tbl_deep_extend("force", default_config, {
   },
 })
 
+-- Slang Server (HRT SystemVerilog language server)
+vim.lsp.config["slang-server"] = vim.tbl_deep_extend("force", default_config, {
+  cmd = { "/Users/abhi/Work/slang-server/build/bin/slang-server" },
+  root_markers = { ".git", ".slang" },
+  filetypes = { "systemverilog", "verilog" },
+})
+
 -- Enable all configured servers
 vim.lsp.enable({
   "html",
@@ -90,6 +97,7 @@ vim.lsp.enable({
   "texlab",
   "vhdl_ls",
   "verible",
+  "slang-server",
   "pyright",
   "pylsp",
   "clangd",
