@@ -1,13 +1,13 @@
 local options = {
 
   base46 = {
-    theme = "tokyonight", -- default theme
+    theme = "ghostty", -- matches ghostty terminal colors
     hl_add = {},
     hl_override = {},
     integrations = {},
     changed_themes = {},
-    transparency = false,
-    theme_toggle = { "onedark", "one_light" },
+    transparency = true,
+    theme_toggle = { "ghostty", "one_light" },
   },
 
   ui = {
